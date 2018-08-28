@@ -34,8 +34,10 @@ under the License.
       <configuration>
         <id>default</id>
         <!-- START SNIPPET: lifecycle -->
-        <phases>
+        <prePhases>
           <phase>validate</phase>
+        </prePhases>
+        <phases>
           <phase>initialize</phase>
           <phase>generate-sources</phase>
           <phase>process-sources</phase>
@@ -56,9 +58,11 @@ under the License.
           <phase>integration-test</phase>
           <phase>post-integration-test</phase>
           <phase>verify</phase>
+        </phases>
+        <postPhases>
           <phase>install</phase>
           <phase>deploy</phase>
-        </phases>
+        </postPhases>
         <!-- END SNIPPET: lifecycle -->
       </configuration>
     </component>
@@ -97,8 +101,10 @@ under the License.
           <phase>pre-site</phase>
           <phase>site</phase>
           <phase>post-site</phase>
-          <phase>site-deploy</phase>
         </phases>
+        <postPhases>
+          <phase>site-deploy</phase>
+        </postPhases>
         <default-phases>
           <site>
             org.apache.maven.plugins:maven-site-plugin:3.3:site

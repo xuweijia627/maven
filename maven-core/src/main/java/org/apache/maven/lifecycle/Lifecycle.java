@@ -19,6 +19,7 @@ package org.apache.maven.lifecycle;
  * under the License.
  */
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +55,17 @@ public class Lifecycle
 
     private String id;
 
+    /**
+     * @since 3.6.0
+     */
+    private List<String> prePhases = new ArrayList<>();
+
     private List<String> phases;
+
+    /**
+     * @since 3.6.0
+     */
+    private List<String> postPhases = new ArrayList<>();
 
     private Map<String, LifecyclePhase> defaultPhases;
 
@@ -63,9 +74,28 @@ public class Lifecycle
         return this.id;
     }
 
+    public List<String> getPrePhases()
+    {
+        return prePhases;
+    }
+
     public List<String> getPhases()
     {
         return this.phases;
+    }
+
+    public List<String> getPostPhases()
+    {
+        return postPhases;
+    }
+    
+    public List<String> getAllPhases()
+    {
+        List<String> allPhases = new ArrayList<>( prePhases.size() + phases.size() + postPhases.size() );
+        allPhases.addAll( prePhases );
+        allPhases.addAll( phases );
+        allPhases.addAll( postPhases );
+        return allPhases;
     }
 
     public Map<String, LifecyclePhase> getDefaultLifecyclePhases()

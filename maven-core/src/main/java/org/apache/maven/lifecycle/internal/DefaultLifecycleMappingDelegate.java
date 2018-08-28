@@ -69,7 +69,7 @@ public class DefaultLifecycleMappingDelegate
         Map<String, Map<Integer, List<MojoExecution>>> mappings =
             new LinkedHashMap<>();
 
-        for ( String phase : lifecycle.getPhases() )
+        for ( String phase : lifecycle.getAllPhases() )
         {
             Map<Integer, List<MojoExecution>> phaseBindings = new TreeMap<>();
 

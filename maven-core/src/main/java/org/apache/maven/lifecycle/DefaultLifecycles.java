@@ -89,7 +89,7 @@ public class DefaultLifecycles
                 logger.debug( "Lifecycle " + lifecycle );
             }
 
-            for ( String phase : lifecycle.getPhases() )
+            for ( String phase : lifecycle.getAllPhases() )
             {
                 // The first definition wins.
                 if ( !phaseToLifecycleMap.containsKey( phase ) )
@@ -136,7 +136,7 @@ public class DefaultLifecycles
 
         for ( Lifecycle lifecycle : getLifeCycles() )
         {
-            phases.addAll( lifecycle.getPhases() );
+            phases.addAll( lifecycle.getAllPhases() );
         }
 
         return StringUtils.join( phases.iterator(), ", " );

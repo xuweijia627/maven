@@ -78,7 +78,7 @@ public class MavenExecutionPlan
                 final Lifecycle lifecycle = defaultLifecycles.get( phase );
                 if ( lifecycle != null )
                 {
-                    totalPhaseSet.addAll( lifecycle.getPhases() );
+                    totalPhaseSet.addAll( lifecycle.getAllPhases() );
                 }
             }
         }
