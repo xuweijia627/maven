@@ -26,6 +26,7 @@ import org.apache.maven.lifecycle.internal.ProjectSegment;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.InvalidPluginDescriptorException;
 import org.apache.maven.plugin.MojoExecution;
+import org.apache.maven.plugin.MojoExecution.LifecyclePhaseGroup;
 import org.apache.maven.plugin.MojoNotFoundException;
 import org.apache.maven.plugin.PluginDescriptorParsingException;
 import org.apache.maven.plugin.PluginNotFoundException;
@@ -207,7 +208,7 @@ public class LifecycleExecutionPlanCalculatorStub
         MojoExecution result = new MojoExecution( plugin, goal, executionId );
         result.setConfiguration( new Xpp3Dom( executionId + "-" + goal ) );
         result.setMojoDescriptor( mojoDescriptor );
-        result.setLifecyclePhase( mojoDescriptor.getPhase() );
+        result.setLifecyclePhase( mojoDescriptor.getPhase(), getPhaseGroup( mojoDescriptor.getPhase() ) );
 
         return result;
 
@@ -239,4 +240,20 @@ public class LifecycleExecutionPlanCalculatorStub
         return new HashSet<>( Arrays.asList( "compile" ) );
     }
 
+    private static LifecyclePhaseGroup getPhaseGroup( String phase )
+    {
+        if ( "validate".equals( phase ) )
+        {
+            return LifecyclePhaseGroup.PREPHASES;
+        }
+        else if ( "install".equals( phase ) || "site-deploy".equals( phase ))
+        {
+            return LifecyclePhaseGroup.POSTPHASES;
+        }
+        else
+        {
+            return LifecyclePhaseGroup.PHASES;
+        }
+    }
+    
 }

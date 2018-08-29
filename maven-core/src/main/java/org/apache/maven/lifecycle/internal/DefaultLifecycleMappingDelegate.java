@@ -37,6 +37,7 @@ import org.apache.maven.plugin.MojoNotFoundException;
 import org.apache.maven.plugin.PluginDescriptorParsingException;
 import org.apache.maven.plugin.PluginNotFoundException;
 import org.apache.maven.plugin.PluginResolutionException;
+import org.apache.maven.plugin.MojoExecution.LifecyclePhaseGroup;
 import org.apache.maven.plugin.descriptor.MojoDescriptor;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.annotations.Component;
@@ -56,6 +57,7 @@ public class DefaultLifecycleMappingDelegate
     @Requirement
     private BuildPluginManager pluginManager;
 
+    @Override
     public Map<String, List<MojoExecution>> calculateLifecycleMappings( MavenSession session, MavenProject project,
                                                                         Lifecycle lifecycle, String lifecyclePhase )
         throws PluginNotFoundException, PluginResolutionException, PluginDescriptorParsingException,
@@ -102,7 +104,8 @@ public class DefaultLifecycleMappingDelegate
                         for ( String goal : execution.getGoals() )
                         {
                             MojoExecution mojoExecution = new MojoExecution( plugin, goal, execution.getId() );
-                            mojoExecution.setLifecyclePhase( execution.getPhase() );
+                            mojoExecution.setLifecyclePhase( execution.getPhase(),
+                                                             getPhaseGroup( lifecycle, execution.getPhase() ) );
                             addMojoExecution( phaseBindings, mojoExecution, execution.getPriority() );
                         }
                     }
@@ -120,7 +123,8 @@ public class DefaultLifecycleMappingDelegate
                         if ( phaseBindings != null )
                         {
                             MojoExecution mojoExecution = new MojoExecution( mojoDescriptor, execution.getId() );
-                            mojoExecution.setLifecyclePhase( mojoDescriptor.getPhase() );
+                            mojoExecution.setLifecyclePhase( mojoDescriptor.getPhase(),
+                                                             getPhaseGroup( lifecycle, execution.getPhase() ) );
                             addMojoExecution( phaseBindings, mojoExecution, execution.getPriority() );
                         }
                     }
@@ -160,4 +164,19 @@ public class DefaultLifecycleMappingDelegate
         mojoExecutions.add( mojoExecution );
     }
 
+    private LifecyclePhaseGroup getPhaseGroup( Lifecycle lifecycle, String phase )
+    {
+        if ( lifecycle.getPrePhases().contains( phase ) )
+        {
+            return LifecyclePhaseGroup.PREPHASES;
+        }
+        else if ( lifecycle.getPostPhases().contains( phase ) )
+        {
+            return LifecyclePhaseGroup.POSTPHASES;
+        }
+        else
+        {
+            return LifecyclePhaseGroup.PHASES;
+        }
+    }
 }

@@ -59,6 +59,18 @@ public class MojoExecution
          */
         LIFECYCLE,
     }
+    
+    /**
+     * The group of the phase. Could have been combined with {@link Source} like CLI, LIFECYCLE_PREPHASES,
+     * LIFECYCLE_PHASES, LIFECYCLE_POSTPHASES but that would break backwards compatibility.
+     * 
+     * @author Robert Scholte
+     * @since 3.6.0
+     */
+    public enum LifecyclePhaseGroup
+    {
+        PREPHASES, PHASES, POSTPHASES
+    }
 
     private Source source = Source.LIFECYCLE;
 
@@ -67,7 +79,9 @@ public class MojoExecution
      * this mojo execution is going to run in.
      */
     private String lifecyclePhase;
-
+    
+    private LifecyclePhaseGroup lifecyclePhaseGroup;
+    
     /**
      * The executions to fork before this execution, indexed by the groupId:artifactId:version of the project on which
      * the forked execution are to be run and in reactor build order.
@@ -165,9 +179,25 @@ public class MojoExecution
         return lifecyclePhase;
     }
 
+    public LifecyclePhaseGroup getLifecyclePhaseGroup()
+    {
+        return lifecyclePhaseGroup;
+    }
+
+    /**
+     * @param lifecyclePhase
+     * @deprecated instead use {@link #setLifecyclePhase(String, LifecyclePhaseGroup)} 
+     */
+    @Deprecated
     public void setLifecyclePhase( String lifecyclePhase )
     {
         this.lifecyclePhase = lifecyclePhase;
+    }
+
+    public void setLifecyclePhase( String lifecyclePhase, LifecyclePhaseGroup group )
+    {
+        this.lifecyclePhase = lifecyclePhase;
+        this.lifecyclePhaseGroup = group;
     }
 
     @Override
